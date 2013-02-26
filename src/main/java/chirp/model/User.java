@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
-
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -21,15 +18,6 @@ public class User implements Serializable {
 		this.username = username;
 		this.realname = realname;
 		this.posts = new TreeMap<Timestamp, Post>();
-	}
-
-	@JsonCreator
-	public User(@JsonProperty("username") String username,
-			@JsonProperty("realname") String realname,
-			@JsonProperty("posts") Collection<Post> posts) {
-		this.username = username;
-		this.realname = realname;
-		this.posts = null;
 	}
 
 	public String getUsername() {

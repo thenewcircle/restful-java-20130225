@@ -14,6 +14,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import chirp.model.User;
 import chirp.model.UserRepository;
+import chirp.service.representations.UserRepresentation;
 
 import com.google.inject.Inject;
 
@@ -30,10 +31,12 @@ public class UserResource {
 	@GET
 	@Path("{username}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUser(@PathParam("username") String username) {
-		return userRepository.getUser(username);
+	public UserRepresentation getUser(@PathParam("username") String username) {
+		User user = userRepository.getUser(username);
+		UserRepresentation rep = new UserRepresentation(user);
+		return rep;
 	}
-	
+
 	@PUT
 	@Path("{username}")
 	public Response createUser(@PathParam("username") String username, @FormParam("realname") String realname) {

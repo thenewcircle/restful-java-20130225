@@ -9,6 +9,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Test;
 
 import chirp.model.User;
+import chirp.service.representations.UserRepresentation;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -38,7 +39,7 @@ public class UserResourceTest extends ResourceTest {
 	@Test
 	public void getUserMustGetUser() {
 		getUserRepository().createUser("testuser", "Test User");
-		User user = resource().path("user").path("testuser").get(User.class);
+		UserRepresentation user = resource().path("user").path("testuser").get(UserRepresentation.class);
 		assertEquals("testuser", user.getUsername());
 		assertEquals("Test User", user.getRealname());
 	}
