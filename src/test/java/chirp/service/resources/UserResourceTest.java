@@ -2,6 +2,7 @@ package chirp.service.resources;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.CREATED;
 import static com.sun.jersey.api.client.ClientResponse.Status.FORBIDDEN;
+import static com.sun.jersey.api.client.ClientResponse.Status.NOT_FOUND;
 import static junit.framework.Assert.assertEquals;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -44,5 +45,9 @@ public class UserResourceTest extends ResourceTest {
 		assertEquals("Test User", user.getRealname());
 	}
 
-	// getMissingUserMustBeNotFound
+	@Test
+	public void missingUserMustBeNotFound() {
+		ClientResponse response = resource().path("user").path("testuser").get(ClientResponse.class);
+		assertEquals(NOT_FOUND.getStatusCode(), response.getStatus());
+	}
 }
