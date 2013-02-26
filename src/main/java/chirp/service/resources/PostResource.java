@@ -16,6 +16,7 @@ import chirp.model.Post;
 import chirp.model.Timestamp;
 import chirp.model.User;
 import chirp.model.UserRepository;
+import chirp.service.representations.PostRepresentation;
 
 import com.google.inject.Inject;
 
@@ -41,8 +42,10 @@ public class PostResource {
 	@GET
 	@Path("{timestamp}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Post getPost(@PathParam("username") String username, @PathParam("timestamp") String timestamp) {
+	public PostRepresentation getPost(@PathParam("username") String username, @PathParam("timestamp") String timestamp) {
 		User user = userRepository.getUser(username);
-		return user.getPost(new Timestamp(timestamp));
+		Post post = user.getPost(new Timestamp(timestamp));
+		PostRepresentation rep = new PostRepresentation(post);
+		return rep;
 	}
 }
