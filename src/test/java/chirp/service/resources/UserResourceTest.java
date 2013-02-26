@@ -43,4 +43,6 @@ public class UserResourceTest extends ResourceTest {
 		assertEquals("testuser", user.getUsername());
 		assertEquals("Test User", user.getRealname());
 	}
+
+	// getMissingUserMustBeNotFound
 }
