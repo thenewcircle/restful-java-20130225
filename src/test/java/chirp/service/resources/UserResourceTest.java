@@ -34,4 +34,12 @@ public class UserResourceTest extends ResourceTest {
 		ClientResponse response = resource().path("user").path("testuser").put(ClientResponse.class, form);
 		assertEquals(FORBIDDEN.getStatusCode(), response.getStatus());
 	}
+
+	@Test
+	public void getUserMustGetUser() {
+		getUserRepository().createUser("testuser", "Test User");
+		User user = resource().path("user").path("testuser").get(User.class);
+		assertEquals("testuser", user.getUsername());
+		assertEquals("Test User", user.getRealname());
+	}
 }
