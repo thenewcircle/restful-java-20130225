@@ -37,7 +37,7 @@ public class Server {
 		});
 
 		// start server with guice injector
-		HttpServer server = createHttpServer("http://localhost:8080", rc,
+		HttpServer server = createHttpServer("http://127.0.0.1:8080", rc,
 				new GuiceComponentProviderFactory(rc, injector));
 
 		// wait for shutdown ...
