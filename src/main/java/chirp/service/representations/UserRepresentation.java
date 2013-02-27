@@ -16,9 +16,10 @@ public class UserRepresentation {
 	private final String realname;
 	private final URI self;
 
-	public UserRepresentation(User user) {
-		this.username = user.getUsername();
-		this.realname = user.getRealname();
+	public UserRepresentation(User user, boolean summary) {
+		String username = user.getUsername();
+		this.username = summary ? null : username;
+		this.realname = summary ? null : user.getRealname();
 		self = UriBuilder.fromResource(UserResource.class).path(username).build();
 	}
 

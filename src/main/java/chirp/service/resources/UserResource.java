@@ -43,7 +43,7 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserRepresentation getUser(@PathParam("username") String username) {
 		User user = userRepository.getUser(username);
-		UserRepresentation rep = new UserRepresentation(user);
+		UserRepresentation rep = new UserRepresentation(user, false);
 		return rep;
 	}
 
