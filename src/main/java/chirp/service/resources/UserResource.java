@@ -9,8 +9,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 
 import chirp.model.User;
@@ -32,10 +36,17 @@ public class UserResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserCollectionRepresentation getUsers() {
+	public Response getUsers(@Context Request request) {
 		Collection<User> users = userRepository.getUsers();
+		EntityTag eTag = new EntityTag(String.valueOf(users.hashCode()));
+
+		ResponseBuilder response = request.evaluatePreconditions(eTag);
+		if (response != null) {
+			return response.build();
+		}
+
 		UserCollectionRepresentation rep = new UserCollectionRepresentation(users);
-		return rep;
+		return Response.ok(rep).tag(eTag).build();
 	}
 	
 	@GET
