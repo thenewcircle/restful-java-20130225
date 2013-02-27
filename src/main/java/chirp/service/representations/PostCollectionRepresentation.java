@@ -4,21 +4,25 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ws.rs.core.UriBuilder;
-
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import chirp.model.Post;
-import chirp.service.resources.PostResource;
+import chirp.model.User;
+
+import com.sun.jersey.server.linking.Ref;
 
 public class PostCollectionRepresentation {
 
-	private final URI self;
+	@Ref("/post/{username}")
+	private URI self;
+
+	private final String username;
 	private final Collection<PostRepresentation> posts;
 
-	public PostCollectionRepresentation(Collection<Post> posts) {
-		this.self = UriBuilder.fromResource(PostResource.class).build();
+	public PostCollectionRepresentation(User user, Collection<Post> posts) {
+		this.username = user.getUsername();
 		this.posts = new ArrayList<PostRepresentation>();
 		for (Post post : posts) {
 			this.posts.add(new PostRepresentation(post, true));
@@ -29,12 +33,18 @@ public class PostCollectionRepresentation {
 	public PostCollectionRepresentation(
 			@JsonProperty("self") URI self,
 			@JsonProperty("posts") Collection<PostRepresentation> posts) {
+		this.username = null;
 		this.self = self;
 		this.posts = posts;
 	}
 
 	public URI getSelf() {
 		return self;
+	}
+
+	@JsonIgnore
+	public String getUsername() {
+		return username;
 	}
 
 	public Collection<PostRepresentation> getPosts() {

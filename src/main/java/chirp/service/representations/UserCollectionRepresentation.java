@@ -4,21 +4,21 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ws.rs.core.UriBuilder;
-
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import chirp.model.User;
-import chirp.service.resources.UserResource;
+
+import com.sun.jersey.server.linking.Ref;
 
 public class UserCollectionRepresentation {
 
-	private final URI self;
+	@Ref("/user")
+	private URI self;
+
 	private final Collection<UserRepresentation> users;
 
 	public UserCollectionRepresentation(Collection<User> users) {
-		this.self = UriBuilder.fromResource(UserResource.class).build();
 		this.users = new ArrayList<UserRepresentation>();
 		for (User user : users) {
 			this.users.add(new UserRepresentation(user, true));
