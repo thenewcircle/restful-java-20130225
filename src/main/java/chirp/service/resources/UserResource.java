@@ -38,8 +38,8 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(@Context Request request) {
 		Collection<User> users = userRepository.getUsers();
-		EntityTag eTag = new EntityTag(String.valueOf(users.hashCode()));
 
+		EntityTag eTag = getEntityTag();
 		ResponseBuilder response = request.evaluatePreconditions(eTag);
 		if (response != null) {
 			return response.build();
@@ -60,10 +60,23 @@ public class UserResource {
 
 	@PUT
 	@Path("{username}")
-	public Response createUser(@PathParam("username") String username, @FormParam("realname") String realname) {
+	public Response createUser(
+			@PathParam("username") String username,
+			@FormParam("realname") String realname,
+			@Context Request request) {
+		ResponseBuilder response = request.evaluatePreconditions(getEntityTag());
+		if (response != null) {
+			return response.build();
+		}
+		
 		userRepository.createUser(username, realname);
 
 		URI uri = UriBuilder.fromPath("").build();
-		return Response.created(uri).build();
+		return Response.created(uri).tag(getEntityTag()).build();
+	}
+
+	private EntityTag getEntityTag() {
+		Collection<User> users = userRepository.getUsers();
+		return new EntityTag(String.valueOf(users.hashCode()));
 	}
 }

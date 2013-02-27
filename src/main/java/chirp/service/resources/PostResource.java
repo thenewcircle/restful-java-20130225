@@ -1,6 +1,7 @@
 package chirp.service.resources;
 
 import java.net.URI;
+import java.util.Collection;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -8,14 +9,19 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 
 import chirp.model.Post;
 import chirp.model.Timestamp;
 import chirp.model.User;
 import chirp.model.UserRepository;
+import chirp.service.representations.PostCollectionRepresentation;
 import chirp.service.representations.PostRepresentation;
 
 import com.google.inject.Inject;
@@ -30,8 +36,22 @@ public class PostResource {
 		this.userRepository = userRepository;
 	}
 
-	// TODO: getPosts
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPosts(@PathParam("username") String username, @Context Request request) {
+		User user = userRepository.getUser(username);
+		Collection<Post> posts = user.getPosts();
+		EntityTag eTag = new EntityTag(String.valueOf(posts.hashCode()));
+		
+		ResponseBuilder response = request.evaluatePreconditions(eTag);
+		if (response != null) {
+			return response.build();
+		}
 
+		PostCollectionRepresentation rep = new PostCollectionRepresentation(user, posts);
+		return Response.ok(rep).tag(eTag).build();
+	}
+	
 	@POST
 	public Response createPost(@PathParam("username") String username, @FormParam("content") String content) {
 		User user = userRepository.getUser(username);
