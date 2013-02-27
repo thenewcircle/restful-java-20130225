@@ -30,6 +30,8 @@ public class PostResource {
 		this.userRepository = userRepository;
 	}
 
+	// TODO: getPosts
+
 	@POST
 	public Response createPost(@PathParam("username") String username, @FormParam("content") String content) {
 		User user = userRepository.getUser(username);
@@ -45,7 +47,7 @@ public class PostResource {
 	public PostRepresentation getPost(@PathParam("username") String username, @PathParam("timestamp") String timestamp) {
 		User user = userRepository.getUser(username);
 		Post post = user.getPost(new Timestamp(timestamp));
-		PostRepresentation rep = new PostRepresentation(post);
+		PostRepresentation rep = new PostRepresentation(post, false);
 		return rep;
 	}
 }
